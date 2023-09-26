@@ -6,7 +6,7 @@ const port = process.env.PORT || 5000;
 const app = express();
 
 // mondodb setting
-const { MongoClient, ServerApiVersion } = mondodb;
+const { MongoClient, ServerApiVersion, ObjectId } = mondodb;
 const uri = 'mongodb+srv://abdussattar:RRyzMaSGNGKJVJxS@cluster0.bn1ubyr.mongodb.net/?retryWrites=true&w=majority';
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -32,6 +32,13 @@ const run = async () => {
     app.post('/users', async (req, res) => {
       const users = req.body;
       const result = await usersCollection.insertOne(users);
+      res.send(result);
+    });
+
+    app.delete('/users/:id', async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: new ObjectId(id) };
+      const result = usersCollection.deleteOne(query);
       res.send(result);
     });
     // Send a ping to confirm a successful connection
