@@ -29,6 +29,13 @@ const run = async () => {
       res.send(result);
     });
 
+    app.get('/users/:id', async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: new ObjectId(id) };
+      const user = await usersCollection.findOne(query);
+      res.send(user);
+    });
+
     app.post('/users', async (req, res) => {
       const users = req.body;
       const result = await usersCollection.insertOne(users);
@@ -38,12 +45,11 @@ const run = async () => {
     app.delete('/users/:id', async (req, res) => {
       const { id } = req.params;
       const query = { _id: new ObjectId(id) };
-      const result = usersCollection.deleteOne(query);
+      const result = await usersCollection.deleteOne(query);
       res.send(result);
     });
     // Send a ping to confirm a successful connection
     await client.db('admin').command({ ping: 1 });
-    console.log('Pinged your deployment. You successfully connected to MongoDB!');
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
