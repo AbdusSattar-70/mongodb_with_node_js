@@ -36,6 +36,21 @@ const run = async () => {
       res.send(user);
     });
 
+    app.put('/users/:id', async (req, res) => {
+      const { id } = req.params;
+      const query = { _id: new ObjectId(id) };
+      const user = req.body;
+      const updatedUser = {
+        $set: {
+          name: user.name,
+          email: user.email,
+        },
+      };
+      const options = { upsert: true };
+      const result = await usersCollection.updateOne(query, updatedUser, options);
+      res.send(result);
+    });
+
     app.post('/users', async (req, res) => {
       const users = req.body;
       const result = await usersCollection.insertOne(users);
